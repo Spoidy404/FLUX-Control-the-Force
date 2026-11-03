@@ -4,38 +4,42 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#07101d">
 <title>FLUX — Limitless Blue</title>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-    --bg: #07101c;
-    --panel: #101d30;
-    --cyan: #55dfff;
-    --blue: #168bff;
+    --bg: #07101d;
+    --cyan: #58dcff;
+    --blue: #168cff;
     --text: #eaf6ff;
-    --muted: #8ca2bb;
-    --border: #263d58;
+    --muted: #8da4bc;
+    --border: #2b4763;
 }
 
-* { box-sizing: border-box; }
+* {
+    box-sizing: border-box;
+}
 
 body {
     margin: 0;
     min-height: 100vh;
     padding: 20px;
-    background:
-        radial-gradient(ellipse at 50% -25%, #173b62 0%, transparent 60%),
-        var(--bg);
-    color: var(--text);
-    font-family: Inter, Arial, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
+    background:
+        radial-gradient(ellipse at 50% -20%, #173b63 0%, transparent 60%),
+        var(--bg);
+    color: var(--text);
+    font-family: Inter, Arial, sans-serif;
 }
 
-.app { width: min(1120px, 100%); }
+.app {
+    width: min(1120px, 100%);
+}
 
 .header {
     display: flex;
@@ -121,6 +125,109 @@ canvas {
     touch-action: none;
 }
 
+/* =========================================
+   GOJO IMAGE
+   The real PNG is an HTML image element.
+   It is not drawn by the Canvas.
+========================================= */
+
+.mascot {
+    display: none;
+    position: absolute;
+    z-index: 3;
+    top: 5%;
+    right: 3%;
+    width: clamp(90px, 15%, 150px);
+    pointer-events: none;
+    animation: gojoFloat 3s ease-in-out infinite;
+}
+
+.frame.playing .mascot {
+    display: block;
+}
+
+.mascot img {
+    display: block;
+    width: 100%;
+    max-height: 175px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px #55dfff60);
+}
+
+@keyframes gojoFloat {
+    0%, 100% {
+        transform: translateY(0) rotate(-2deg);
+    }
+    50% {
+        transform: translateY(-13px) rotate(2deg);
+    }
+}
+
+/* Orb appears near Gojo's hand.
+   Adjust these positions if your image has a different pose. */
+
+.mascot-orb {
+    position: absolute;
+    top: 34%;
+    right: -2%;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 30% 30%,
+        white,
+        #baf3ff 23%,
+        #39aaff 65%,
+        #0755c3
+    );
+    box-shadow:
+        0 0 12px #a4edff,
+        0 0 28px #168bff;
+    animation: orbPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes orbPulse {
+    0%, 100% {
+        transform: scale(.85);
+        opacity: .8;
+    }
+    50% {
+        transform: scale(1.35);
+        opacity: 1;
+    }
+}
+
+.mascot-label {
+    text-align: center;
+    color: #a9edff;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    margin-top: 3px;
+}
+
+.mascot-fallback {
+    display: none;
+    text-align: center;
+    padding: 15px 5px;
+    border: 1px solid #55dfff;
+    border-radius: 15px;
+    background: #102d4b;
+    color: #a9edff;
+    font-family: Orbitron, sans-serif;
+    font-weight: 800;
+    font-size: 20px;
+    box-shadow: 0 0 25px #168bff55;
+}
+
+.mascot.no-image .mascot-fallback {
+    display: block;
+}
+
+/* =========================================
+   SCREENS AND OVERLAYS
+========================================= */
+
 .overlay {
     position: absolute;
     inset: 0;
@@ -134,16 +241,47 @@ canvas {
     backdrop-filter: blur(8px);
 }
 
-.overlay.hidden { display: none; }
+.overlay.hidden {
+    display: none;
+}
+
+/* Stylish JJK-inspired Gojo background for the menu. */
+
+.overlay.menu-backdrop {
+    background-color: #07101d;
+    background-image:
+        linear-gradient(
+            90deg,
+            rgba(3, 9, 20, .96) 0%,
+            rgba(5, 17, 35, .84) 50%,
+            rgba(5, 13, 29, .35) 100%
+        ),
+        linear-gradient(
+            0deg,
+            rgba(4, 11, 23, .45),
+            transparent
+        ),
+        url("assets/gojo-blue-background.jpg");
+
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
 
 .screen {
     width: min(520px, 100%);
-    animation: appear .3s ease;
+    animation: appear .35s ease;
 }
 
 @keyframes appear {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .eyebrow {
@@ -156,28 +294,30 @@ canvas {
 
 .hero {
     font-family: Orbitron, sans-serif;
-    font-size: clamp(52px, 10vw, 88px);
+    font-size: clamp(55px, 10vw, 91px);
     font-weight: 800;
     letter-spacing: 8px;
     line-height: 1;
-    text-shadow: 0 0 35px #168bff70;
+    text-shadow: 0 0 35px #168bff80;
 }
 
-.hero span { color: var(--cyan); }
+.hero span {
+    color: var(--cyan);
+}
 
 .subtitle {
-    color: #78caff;
+    color: #8edfff;
     letter-spacing: 4px;
     font-size: 11px;
     font-weight: 800;
-    margin: 13px 0 20px;
+    margin: 14px 0 20px;
 }
 
 .description {
-    color: #afc2d7;
+    color: #bed0e4;
     font-size: 13px;
     line-height: 1.8;
-    max-width: 420px;
+    max-width: 425px;
     margin: 0 auto 24px;
 }
 
@@ -189,7 +329,7 @@ canvas {
 }
 
 .primary, .secondary {
-    padding: 12px 22px;
+    padding: 13px 23px;
     border-radius: 9px;
     border: 0;
     cursor: pointer;
@@ -203,7 +343,7 @@ canvas {
 .primary {
     color: #031321;
     background: var(--cyan);
-    box-shadow: 0 0 24px #55dfff40;
+    box-shadow: 0 0 24px #55dfff45;
 }
 
 .primary:hover {
@@ -217,7 +357,9 @@ canvas {
     border: 1px solid #385473;
 }
 
-.secondary:hover { background: #263e5b; }
+.secondary:hover {
+    background: #263e5b;
+}
 
 .instructions {
     display: grid;
@@ -260,6 +402,10 @@ canvas {
     margin: 15px 0;
 }
 
+/* =========================================
+   BOTTOM CONTROLS
+========================================= */
+
 .toolbar {
     display: flex;
     justify-content: space-between;
@@ -275,7 +421,9 @@ canvas {
     line-height: 1.6;
 }
 
-.hint b { color: var(--cyan); }
+.hint b {
+    color: var(--cyan);
+}
 
 .controls {
     display: flex;
@@ -305,6 +453,12 @@ canvas {
     background: #123449;
 }
 
+.control.repelling {
+    border-color: #ffb16e;
+    color: #ffb16e;
+    background: #392819;
+}
+
 .mobile-note {
     display: none;
     color: var(--muted);
@@ -313,19 +467,50 @@ canvas {
 }
 
 @media(max-width:650px) {
-    body { padding: 10px; }
-    .logo h1 { font-size: 19px; }
-    .stat { min-width: 64px; padding: 8px; }
-    .stat strong { font-size: 11px; }
-    .instructions { grid-template-columns: 1fr; }
-    .instruction { display: flex; gap: 12px; align-items: center; }
-    .instruction .symbol { margin: 0; }
-    .mobile-note { display: block; }
+    body {
+        padding: 10px;
+    }
+
+    .logo h1 {
+        font-size: 19px;
+    }
+
+    .stat {
+        min-width: 61px;
+        padding: 8px;
+    }
+
+    .stat strong {
+        font-size: 11px;
+    }
+
+    .instructions {
+        grid-template-columns: 1fr;
+    }
+
+    .instruction {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .instruction .symbol {
+        margin: 0;
+    }
+
+    .mobile-note {
+        display: block;
+    }
+
+    .mascot {
+        width: 90px;
+    }
 }
 </style>
 </head>
 
 <body>
+
 <div class="app">
 
 <header class="header">
@@ -340,126 +525,201 @@ canvas {
     <div class="stats">
         <div class="stat">
             <span>LEVEL</span>
-            <strong id="level">01</strong>
+            <strong id="levelDisplay">01</strong>
         </div>
+
         <div class="stat">
             <span>TIME</span>
-            <strong id="time">75</strong>
+            <strong id="timeDisplay">75</strong>
         </div>
+
         <div class="stat">
             <span>SCORE</span>
-            <strong id="score">0000</strong>
+            <strong id="scoreDisplay">0000</strong>
         </div>
+
         <div class="stat">
             <span>BEST</span>
-            <strong id="best">0000</strong>
+            <strong id="bestDisplay">0000</strong>
         </div>
     </div>
 </header>
 
-<div class="frame">
-    <canvas id="game" width="960" height="540"></canvas>
+<div class="frame" id="gameFrame">
+
+    <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+    <!-- REAL, REPLACEABLE GOJO IMAGE -->
+    <div class="mascot" id="mascot">
+
+        <img
+            id="gojoImage"
+            src="assets/gojo-chibi.png"
+            alt="Floating Gojo chibi mascot"
+        >
+
+        <div class="mascot-fallback">
+            GOJO
+            <div style="font-size:8px;letter-spacing:2px">
+                LIMITLESS
+            </div>
+        </div>
+
+        <div class="mascot-orb"></div>
+
+        <div class="mascot-label">
+            LIMITLESS
+        </div>
+    </div>
+
     <div class="overlay" id="overlay"></div>
+
 </div>
 
 <div class="toolbar">
+
     <div>
-        <div class="hint" id="hint">
-            <b>MISSION:</b> Guide the energy core into the portal.
+        <div class="hint" id="hintDisplay">
+            <b>MISSION:</b> Guide the blue core into the portal.
         </div>
+
         <div class="mobile-note">
-            Touch and drag to move the blue magnetic field.
+            Touch and drag inside the arena to move your magnetic field.
         </div>
     </div>
 
     <div class="controls">
-        <button class="control active" id="polarityButton"
-                data-action="polarity">✦ BLUE PULL</button>
-        <button class="control" data-action="restart">↻ RESTART</button>
-        <button class="control" data-action="pause">Ⅱ PAUSE</button>
-        <button class="control" id="soundButton"
-                data-action="sound">♫ SOUND ON</button>
+        <button
+            class="control active"
+            id="polarityButton"
+            data-action="polarity">
+            ✦ BLUE PULL
+        </button>
+
+        <button class="control" data-action="restart">
+            ↻ RESTART
+        </button>
+
+        <button class="control" data-action="pause">
+            Ⅱ PAUSE
+        </button>
+
+        <button
+            class="control"
+            id="soundButton"
+            data-action="sound">
+            ♫ SOUND ON
+        </button>
     </div>
+
 </div>
 
 </div>
+
+<!-- GOJO VOICE FILE -->
+<audio id="gojoVoice" src="assets/gojo-yowai-mo.mp3" preload="auto"></audio>
 
 <script>
-// ====================================================
-// FLUX: LIMITLESS BLUE
-// Single-file HTML5 Canvas game.
-// ====================================================
 
-const canvas = document.getElementById("game");
+// =====================================================
+// FLUX: LIMITLESS BLUE
+// HTML + CSS + JAVASCRIPT
+// =====================================================
+
+const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
 const overlay = document.getElementById("overlay");
+const frame = document.getElementById("gameFrame");
+const gojoImage = document.getElementById("gojoImage");
+const gojoVoice = document.getElementById("gojoVoice");
 
 const W = 960;
 const H = 540;
 const FLOOR = 490;
 
-const PORTAL = { x: 875, y: 426 };
+const PORTAL = {
+    x: 875,
+    y: FLOOR - 25
+};
+
+// =====================================================
+// GAME DATA
+// =====================================================
 
 const game = {
     state: "menu",
+
     level: 1,
     score: 0,
     best: 0,
     timer: 75,
+
     polarity: 1,
     sound: true,
-    pointer: { x: 220, y: 260 },
-    ball: { x: 90, y: FLOOR - 14, vx: 0, vy: 0, r: 14 },
+
+    pointer: {
+        x: 220,
+        y: 250
+    },
+
+    ball: {
+        x: 90,
+        y: FLOOR - 14,
+        vx: 0,
+        vy: 0,
+        r: 14
+    },
+
     obstacles: [],
     particles: [],
     trail: [],
+
     elapsed: 0,
     lastFrame: 0,
     collisionCooldown: 0
 };
 
-// Best score is saved in the browser.
+// High score saved in browser storage.
 try {
     game.best = Number(localStorage.getItem("fluxBest") || 0);
-} catch (e) {
+} catch (error) {
     game.best = 0;
 }
 
-// Gojo asset.
-// Save the downloaded chibi image as assets/gojo-chibi.png.
-const gojo = new Image();
-gojo.src = "assets/gojo-chibi.png";
+// If Gojo image fails to load, show fallback text.
+gojoImage.onerror = function() {
+    document.getElementById("mascot").classList.add("no-image");
+};
 
-let gojoReady = false;
-gojo.onload = () => gojoReady = true;
-gojo.onerror = () => gojoReady = false;
+// =====================================================
+// BACKGROUND STARS
+// =====================================================
 
-// Background stars.
 const stars = [];
 
-for (let i = 0; i < 85; i++) {
+for (let i = 0; i < 90; i++) {
     stars.push({
         x: Math.random() * W,
         y: Math.random() * H,
-        r: Math.random() * 1.5 + 0.3,
+        radius: Math.random() * 1.5 + 0.3,
         alpha: Math.random() * 0.5 + 0.15
     });
 }
 
-// ====================================================
-// SOUND EFFECTS — GENERATED WITH WEB AUDIO
-// No external sound files required.
-// ====================================================
+// =====================================================
+// SOUND ENGINE
+// Generated sound effects use Web Audio API.
+// =====================================================
 
 let audioContext = null;
 
-function audioReady() {
-    if (!game.sound) return false;
-
+function initializeAudio() {
     try {
         if (!audioContext) {
             audioContext = new (
-                window.AudioContext || window.webkitAudioContext
+                window.AudioContext ||
+                window.webkitAudioContext
             )();
         }
 
@@ -468,26 +728,39 @@ function audioReady() {
         }
 
         return true;
-    } catch (e) {
+
+    } catch (error) {
+        console.warn("Web Audio is unavailable.");
         return false;
     }
 }
 
-function tone(startFreq, endFreq, duration, wave = "sine", volume = 0.07) {
-    if (!audioReady()) return;
+function playTone(startFrequency, endFrequency, duration, wave = "sine", volume = 0.06) {
+
+    if (!game.sound) return;
+
+    if (!initializeAudio()) return;
 
     const now = audioContext.currentTime;
+
     const oscillator = audioContext.createOscillator();
     const gain = audioContext.createGain();
 
     oscillator.type = wave;
-    oscillator.frequency.setValueAtTime(startFreq, now);
+
+    oscillator.frequency.setValueAtTime(startFrequency, now);
+
     oscillator.frequency.exponentialRampToValueAtTime(
-        Math.max(1, endFreq), now + duration
+        Math.max(1, endFrequency),
+        now + duration
     );
 
     gain.gain.setValueAtTime(volume, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        now + duration
+    );
 
     oscillator.connect(gain);
     gain.connect(audioContext.destination);
@@ -496,185 +769,307 @@ function tone(startFreq, endFreq, duration, wave = "sine", volume = 0.07) {
     oscillator.stop(now + duration);
 }
 
+// Individual game sounds.
 function soundEffect(type) {
+
     if (!game.sound) return;
 
-    if (type === "pull") {
-        tone(180, 520, 0.22, "sine", 0.055);
-    }
+    switch (type) {
 
-    if (type === "push") {
-        tone(580, 170, 0.19, "triangle", 0.06);
-    }
+        case "pull":
+            playTone(180, 540, 0.22, "sine", 0.055);
+            break;
 
-    if (type === "hit") {
-        tone(170, 75, 0.08, "square", 0.035);
-    }
+        case "push":
+            playTone(580, 160, 0.18, "triangle", 0.06);
+            break;
 
-    if (type === "portal") {
-        tone(420, 760, 0.3, "sine", 0.07);
-        setTimeout(() => tone(650, 1050, 0.35, "sine", 0.05), 130);
-        setTimeout(() => tone(850, 1350, 0.4, "sine", 0.04), 270);
-    }
+        case "hit":
+            playTone(170, 70, 0.09, "square", 0.035);
+            break;
 
-    if (type === "fail") {
-        tone(240, 65, 0.45, "sawtooth", 0.045);
-    }
+        case "click":
+            playTone(500, 750, 0.08, "sine", 0.035);
+            break;
 
-    if (type === "click") {
-        tone(500, 720, 0.08, "sine", 0.035);
+        case "fail":
+            playTone(230, 65, 0.45, "sawtooth", 0.05);
+            break;
+
+        case "complete":
+            playTone(430, 760, 0.28, "sine", 0.06);
+
+            setTimeout(() => {
+                if (game.sound) {
+                    playTone(650, 1050, 0.35, "sine", 0.05);
+                }
+            }, 180);
+
+            break;
     }
 }
 
-// ====================================================
-// LEVEL GENERATOR
-// There are no fixed final levels.
-// Every completion produces a new random layout.
-// ====================================================
+// Gojo speaks after a successful level.
+function playGojoVoice() {
+
+    if (!game.sound) return;
+
+    if (!gojoVoice) return;
+
+    try {
+        gojoVoice.pause();
+        gojoVoice.currentTime = 0;
+
+        gojoVoice.play().catch(error => {
+            console.warn(
+                "Gojo voice could not play. Check the MP3 asset path.",
+                error
+            );
+        });
+
+    } catch (error) {
+        console.warn("Gojo voice playback failed.", error);
+    }
+}
+
+// =====================================================
+// PROCEDURAL LEVEL GENERATOR
+// The game does not have a fixed final level.
+// =====================================================
 
 function randomBetween(min, max) {
     return min + Math.random() * (max - min);
 }
 
-function generateLevel(number) {
+function generateLevel(levelNumber) {
+
     const obstacles = [];
 
-    // More obstacles as the level number increases.
-    const count = Math.min(8, Math.floor((number + 1) / 2));
+    // Obstacle count gradually increases.
+    const count = Math.min(
+        7,
+        1 + Math.floor(levelNumber / 2)
+    );
 
-    const startX = 240;
-    const availableWidth = 535;
-    const slot = count > 0 ? availableWidth / count : 0;
+    const startX = 230;
+    const availableWidth = 580;
+    const slotWidth = availableWidth / count;
 
     for (let i = 0; i < count; i++) {
-        const width = randomBetween(42, 62);
-        const maxHeight = Math.min(155, 55 + number * 5);
-        const height = randomBetween(55, maxHeight);
 
-        const x = startX + i * slot + randomBetween(-8, 8);
-        const y = FLOOR - height;
+        const width = randomBetween(
+            40,
+            Math.min(60, slotWidth * 0.55)
+        );
+
+        const maximumHeight = Math.min(
+            155,
+            55 + levelNumber * 5
+        );
+
+        const height = randomBetween(
+            50,
+            maximumHeight
+        );
+
+        const x = startX +
+            i * slotWidth +
+            (slotWidth - width) / 2;
 
         obstacles.push({
-            x,
-            y,
-            baseY: y,
+            x: x,
+            y: FLOOR - height,
+            baseY: FLOOR - height,
             w: width,
             h: height,
             moving: false,
             phase: Math.random() * Math.PI * 2,
-            amp: 0
+            amplitude: 0
         });
     }
 
-    // Add a floating moving barrier on some later levels.
-    if (number >= 4 && number % 3 === 1) {
-        const y = randomBetween(305, 370);
+    // Floating moving barrier on selected advanced levels.
+    if (levelNumber >= 4 && levelNumber % 3 === 1) {
 
         obstacles.push({
-            x: randomBetween(440, 650),
-            y,
-            baseY: y,
-            w: randomBetween(85, 115),
+            x: 550,
+            y: 330,
+            baseY: 330,
+            w: 105,
             h: 15,
             moving: true,
             phase: Math.random() * Math.PI * 2,
-            amp: 16
+            amplitude: 24
         });
     }
 
     return obstacles;
 }
 
-function levelTime(number) {
-    return Math.max(42, 80 - number * 1.5);
+// Time decreases as difficulty rises.
+function calculateLevelTime(levelNumber) {
+
+    return Math.max(
+        45,
+        82 - levelNumber * 1.5
+    );
 }
 
-// ====================================================
-// SCREENS
-// ====================================================
+// =====================================================
+// GAME SCREENS
+// =====================================================
 
-function showScreen(title, description, buttons, extra = "") {
+function showScreen(title, description, buttons, extra = "", menu = false) {
+
+    frame.classList.remove("playing");
+
     overlay.classList.remove("hidden");
+
+    overlay.classList.toggle("menu-backdrop", menu);
 
     overlay.innerHTML = `
         <div class="screen">
-            <div class="eyebrow">FLUX // LIMITLESS BLUE</div>
-            <h2 style="font-family:Orbitron,sans-serif;letter-spacing:2px;font-size:30px">
+
+            <div class="eyebrow">
+                FLUX // LIMITLESS BLUE
+            </div>
+
+            <h2 style="
+                font-family:Orbitron,sans-serif;
+                letter-spacing:2px;
+                font-size:30px
+            ">
                 ${title}
             </h2>
-            <p class="description">${description}</p>
+
+            <p class="description">
+                ${description}
+            </p>
+
             ${extra}
-            <div class="buttons">${buttons}</div>
+
+            <div class="buttons">
+                ${buttons}
+            </div>
+
         </div>
     `;
 }
 
 function hideScreen() {
+
     overlay.classList.add("hidden");
+    overlay.classList.remove("menu-backdrop");
+
+    frame.classList.add("playing");
 }
 
 function mainMenu() {
+
     game.state = "menu";
+
+    frame.classList.remove("playing");
 
     showScreen(
         '<span class="hero">FL<span>U</span>X</span>',
+
         "Control the force. Master the blue. Guide the core.",
+
         `
-            <button class="primary" data-action="start">▶ START GAME</button>
-            <button class="secondary" data-action="help">HOW TO PLAY</button>
+            <button class="primary" data-action="start">
+                ▶ START GAME
+            </button>
+
+            <button class="secondary" data-action="help">
+                HOW TO PLAY
+            </button>
         `,
+
         `
-            <div class="subtitle">THE LIMITLESS BLUE EXPERIENCE</div>
-            <div class="eyebrow">INFINITE LEVELS · MAGNETIC PHYSICS · GOJO</div>
-        `
+            <div class="subtitle">
+                THE LIMITLESS BLUE EXPERIENCE
+            </div>
+
+            <div class="eyebrow">
+                ENDLESS LEVELS · MAGNETIC PHYSICS · GOJO
+            </div>
+        `,
+
+        true
     );
 }
 
 function helpScreen() {
+
     game.state = "help";
 
     showScreen(
         "HOW TO PLAY",
-        "You control a floating blue magnetic field. Guide the energy core through the obstacles and into the portal.",
+
+        "You control a magnetic field. Guide the glowing blue core through the arena and into the exit portal.",
+
         `
-            <button class="primary" data-action="start">START EXPERIMENT</button>
-            <button class="secondary" data-action="menu">BACK</button>
+            <button class="primary" data-action="start">
+                START EXPERIMENT
+            </button>
+
+            <button class="secondary" data-action="menu">
+                BACK
+            </button>
         `,
+
         `
-            <div class="instructions">
-                <div class="instruction">
-                    <div class="symbol">🖱️</div>
-                    <b>MOVE THE FIELD</b>
-                    <p>Move your mouse or finger inside the arena.</p>
-                </div>
-                <div class="instruction">
-                    <div class="symbol">✦</div>
-                    <b>BLUE PULL</b>
-                    <p>Attract the energy core towards the blue field.</p>
-                </div>
-                <div class="instruction">
-                    <div class="symbol">✧</div>
-                    <b>BLUE PUSH</b>
-                    <p>Push the core away from the magnetic field.</p>
-                </div>
+        <div class="instructions">
+
+            <div class="instruction">
+                <div class="symbol">🖱️</div>
+                <b>MOVE THE FIELD</b>
+                <p>Move your mouse or finger inside the arena.</p>
             </div>
-            <p style="font-size:10px;color:#8ca2bb">
-                SPACE: Switch field · R: Restart · ESC: Pause
-            </p>
+
+            <div class="instruction">
+                <div class="symbol">✦</div>
+                <b>BLUE PULL</b>
+                <p>Attract the energy core towards your field.</p>
+            </div>
+
+            <div class="instruction">
+                <div class="symbol">✧</div>
+                <b>BLUE PUSH</b>
+                <p>Push the core away from your field.</p>
+            </div>
+
+        </div>
+
+        <p style="font-size:10px;color:#a5bad0">
+            SPACE: Switch force · R: Restart · ESC: Pause
+        </p>
         `
     );
 }
 
+// =====================================================
+// START AND RESTART
+// =====================================================
+
 function startGame() {
+
+    initializeAudio();
+
     game.level = 1;
     game.score = 0;
+
     startLevel();
 }
 
 function startLevel() {
+
     game.state = "playing";
-    game.timer = levelTime(game.level);
+
+    game.timer = calculateLevelTime(game.level);
+
     game.polarity = 1;
+
     game.elapsed = 0;
 
     game.ball = {
@@ -685,182 +1080,295 @@ function startLevel() {
         r: 14
     };
 
-    game.pointer = { x: 220, y: 250 };
+    game.pointer = {
+        x: 230,
+        y: 245
+    };
+
     game.obstacles = generateLevel(game.level);
+
     game.particles = [];
     game.trail = [];
+
     game.collisionCooldown = 0;
 
     updateHUD();
     updatePolarityButton();
+
     hideScreen();
+
     soundEffect("click");
 }
 
+// =====================================================
+// LEVEL COMPLETION
+// =====================================================
+
 function completeLevel() {
+
     if (game.state !== "playing") return;
 
     game.state = "complete";
 
     const bonus = Math.ceil(game.timer * 15);
-    const earned = 500 + bonus;
+    const reward = 500 + bonus;
 
-    game.score += earned;
+    game.score += reward;
+
     saveBest();
     updateHUD();
-    soundEffect("portal");
+
+    // Portal chime.
+    soundEffect("complete");
+
+    // Gojo voice clip plays after the completion chime.
+    setTimeout(() => {
+        if (game.state === "complete") {
+            playGojoVoice();
+        }
+    }, 450);
 
     showScreen(
         "LEVEL CLEARED",
-        `Experiment ${game.level} completed. A new challenge is waiting.`,
+
+        `Experiment ${game.level} completed. A new challenge awaits.`,
+
         `
-            <button class="primary" data-action="next">NEXT LEVEL →</button>
-            <button class="secondary" data-action="menu">MAIN MENU</button>
+            <button class="primary" data-action="next">
+                NEXT LEVEL →
+            </button>
+
+            <button class="secondary" data-action="menu">
+                MAIN MENU
+            </button>
         `,
+
         `
-            <div class="score-result">+${earned}</div>
-            <p style="font-size:10px;color:#8ca2bb">
+            <div class="score-result">
+                +${reward}
+            </div>
+
+            <p style="font-size:10px;color:#9db3ca">
                 TIME BONUS INCLUDED · ENDLESS MODE
             </p>
         `
     );
 }
 
+// =====================================================
+// FAILURE
+// =====================================================
+
 function failLevel() {
+
     if (game.state !== "playing") return;
 
     game.state = "failed";
+
     soundEffect("fail");
 
     showScreen(
-        "FIELD LOST",
-        "The experiment timed out. Try a different magnetic strategy.",
+        "FIELD COLLAPSED",
+
+        "Time ran out before the core reached the portal. Try a different magnetic strategy.",
+
         `
-            <button class="primary" data-action="restart">↻ TRY AGAIN</button>
-            <button class="secondary" data-action="menu">MAIN MENU</button>
+            <button class="primary" data-action="restart">
+                ↻ TRY AGAIN
+            </button>
+
+            <button class="secondary" data-action="menu">
+                MAIN MENU
+            </button>
         `
     );
 }
 
+// =====================================================
+// PAUSE
+// =====================================================
+
 function pauseGame() {
+
     if (game.state === "playing") {
+
         game.state = "paused";
 
         showScreen(
             "PAUSED",
+
             "The magnetic field is temporarily suspended.",
+
             `
-                <button class="primary" data-action="resume">RESUME</button>
-                <button class="secondary" data-action="restart">RESTART</button>
-                <button class="secondary" data-action="menu">MAIN MENU</button>
+                <button class="primary" data-action="resume">
+                    RESUME
+                </button>
+
+                <button class="secondary" data-action="restart">
+                    RESTART
+                </button>
+
+                <button class="secondary" data-action="menu">
+                    MAIN MENU
+                </button>
             `
         );
+
     } else if (game.state === "paused") {
+
         game.state = "playing";
         hideScreen();
     }
 }
 
-// ====================================================
-// BUTTON ACTIONS
-// ====================================================
+// =====================================================
+// BUTTON EVENT HANDLING
+// =====================================================
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", function(event) {
+
     const button = event.target.closest("[data-action]");
+
     if (!button) return;
 
     const action = button.dataset.action;
 
-    if (action === "start") startGame();
-    if (action === "help") helpScreen();
-    if (action === "menu") mainMenu();
+    switch (action) {
 
-    if (action === "next") {
-        game.level++;
-        startLevel();
-    }
+        case "start":
+            startGame();
+            break;
 
-    if (action === "resume") {
-        game.state = "playing";
-        hideScreen();
-    }
+        case "help":
+            helpScreen();
+            break;
 
-    if (action === "restart") {
-        if (game.state !== "menu" && game.state !== "help") {
+        case "menu":
+            mainMenu();
+            break;
+
+        case "next":
+            game.level++;
             startLevel();
-        }
-    }
+            break;
 
-    if (action === "pause") pauseGame();
-    if (action === "polarity") togglePolarity();
+        case "resume":
+            game.state = "playing";
+            hideScreen();
+            break;
 
-    if (action === "sound") {
-        game.sound = !game.sound;
-        updateSoundButton();
-        if (game.sound) soundEffect("click");
+        case "restart":
+
+            if (
+                game.state !== "menu" &&
+                game.state !== "help"
+            ) {
+                startLevel();
+            }
+
+            break;
+
+        case "pause":
+            pauseGame();
+            break;
+
+        case "polarity":
+            togglePolarity();
+            break;
+
+        case "sound":
+
+            game.sound = !game.sound;
+
+            updateSoundButton();
+
+            if (game.sound) {
+                initializeAudio();
+                soundEffect("click");
+            }
+
+            break;
     }
 });
 
+// =====================================================
+// MAGNETIC POLARITY
+// =====================================================
+
 function togglePolarity() {
+
     if (game.state !== "playing") return;
 
     game.polarity *= -1;
+
     updatePolarityButton();
 
-    soundEffect(game.polarity === 1 ? "pull" : "push");
-    makeParticles(game.pointer.x, game.pointer.y, 12);
+    soundEffect(
+        game.polarity === 1 ? "pull" : "push"
+    );
+
+    makeParticles(
+        game.pointer.x,
+        game.pointer.y,
+        12
+    );
 }
 
 function updatePolarityButton() {
+
     const button = document.getElementById("polarityButton");
 
     if (game.polarity === 1) {
+
         button.textContent = "✦ BLUE PULL";
+
         button.classList.add("active");
+        button.classList.remove("repelling");
+
     } else {
+
         button.textContent = "✧ BLUE PUSH";
+
         button.classList.remove("active");
+        button.classList.add("repelling");
     }
 }
 
 function updateSoundButton() {
+
     document.getElementById("soundButton").textContent =
         game.sound ? "♫ SOUND ON" : "♫ SOUND OFF";
 }
 
-function saveBest() {
-    if (game.score > game.best) {
-        game.best = game.score;
-
-        try {
-            localStorage.setItem("fluxBest", game.best);
-        } catch (e) {
-            // The game still works if browser storage is blocked.
-        }
-    }
-}
-
-// ====================================================
-// INPUT
-// ====================================================
+// =====================================================
+// MOUSE AND TOUCH INPUT
+// =====================================================
 
 function movePointer(event) {
+
     const rect = canvas.getBoundingClientRect();
 
     game.pointer.x = Math.max(
         25,
-        Math.min(W - 25, (event.clientX - rect.left) * W / rect.width)
+        Math.min(
+            W - 25,
+            (event.clientX - rect.left) * W / rect.width
+        )
     );
 
     game.pointer.y = Math.max(
         40,
-        Math.min(FLOOR - 12, (event.clientY - rect.top) * H / rect.height)
+        Math.min(
+            FLOOR - 12,
+            (event.clientY - rect.top) * H / rect.height
+        )
     );
 }
 
 canvas.addEventListener("pointermove", movePointer);
 
-canvas.addEventListener("pointerdown", (event) => {
+canvas.addEventListener("pointerdown", function(event) {
+
     movePointer(event);
 
     if (canvas.setPointerCapture) {
@@ -868,14 +1376,24 @@ canvas.addEventListener("pointerdown", (event) => {
     }
 });
 
-document.addEventListener("keydown", (event) => {
+// Keyboard.
+document.addEventListener("keydown", function(event) {
+
     if (event.code === "Space") {
+
         event.preventDefault();
-        if (!event.repeat) togglePolarity();
+
+        if (!event.repeat) {
+            togglePolarity();
+        }
     }
 
     if (event.key.toLowerCase() === "r") {
-        if (game.state !== "menu" && game.state !== "help") {
+
+        if (
+            game.state !== "menu" &&
+            game.state !== "help"
+        ) {
             startLevel();
         }
     }
@@ -885,33 +1403,45 @@ document.addEventListener("keydown", (event) => {
     }
 });
 
-// ====================================================
-// PARTICLES
-// ====================================================
+// =====================================================
+// PARTICLE EFFECTS
+// =====================================================
 
 function makeParticles(x, y, amount) {
+
     for (let i = 0; i < amount; i++) {
+
         const angle = Math.random() * Math.PI * 2;
         const speed = randomBetween(40, 160);
 
         game.particles.push({
-            x, y,
+            x,
+            y,
             vx: Math.cos(angle) * speed,
             vy: Math.sin(angle) * speed,
             life: randomBetween(0.3, 0.8),
+            maxLife: 0.8,
             size: randomBetween(1, 3)
         });
     }
 }
 
 function updateParticles(dt) {
-    for (let i = game.particles.length - 1; i >= 0; i--) {
+
+    for (
+        let i = game.particles.length - 1;
+        i >= 0;
+        i--
+    ) {
+
         const p = game.particles[i];
 
         p.x += p.vx * dt;
         p.y += p.vy * dt;
+
         p.vx *= 0.97;
         p.vy *= 0.97;
+
         p.life -= dt;
 
         if (p.life <= 0) {
@@ -920,49 +1450,82 @@ function updateParticles(dt) {
     }
 }
 
-// ====================================================
+// =====================================================
 // COLLISION DETECTION
-// Circle versus rectangle collision.
-// ====================================================
+// Circle versus rectangle.
+// =====================================================
 
 function collideCircleRect(ball, rect) {
+
     const closestX = Math.max(
-        rect.x, Math.min(ball.x, rect.x + rect.w)
+        rect.x,
+        Math.min(ball.x, rect.x + rect.w)
     );
 
     const closestY = Math.max(
-        rect.y, Math.min(ball.y, rect.y + rect.h)
+        rect.y,
+        Math.min(ball.y, rect.y + rect.h)
     );
 
-    let dx = ball.x - closestX;
-    let dy = ball.y - closestY;
-    let distance = Math.hypot(dx, dy);
+    const dx = ball.x - closestX;
+    const dy = ball.y - closestY;
 
-    if (distance >= ball.r) return false;
+    const distance = Math.hypot(dx, dy);
 
-    let nx, ny;
+    if (distance >= ball.r) {
+        return false;
+    }
+
+    let nx;
+    let ny;
 
     if (distance < 0.001) {
+
         // The ball centre is inside the obstacle.
         const edges = [
-            { d: Math.abs(ball.x - rect.x), nx: -1, ny: 0 },
-            { d: Math.abs(rect.x + rect.w - ball.x), nx: 1, ny: 0 },
-            { d: Math.abs(ball.y - rect.y), nx: 0, ny: -1 },
-            { d: Math.abs(rect.y + rect.h - ball.y), nx: 0, ny: 1 }
+            {
+                distance: Math.abs(ball.x - rect.x),
+                nx: -1,
+                ny: 0
+            },
+            {
+                distance: Math.abs(rect.x + rect.w - ball.x),
+                nx: 1,
+                ny: 0
+            },
+            {
+                distance: Math.abs(ball.y - rect.y),
+                nx: 0,
+                ny: -1
+            },
+            {
+                distance: Math.abs(rect.y + rect.h - ball.y),
+                nx: 0,
+                ny: 1
+            }
         ];
 
-        edges.sort((a, b) => a.d - b.d);
+        edges.sort((a, b) => a.distance - b.distance);
 
         nx = edges[0].nx;
         ny = edges[0].ny;
 
-        if (nx === -1) ball.x = rect.x - ball.r;
-        if (nx === 1) ball.x = rect.x + rect.w + ball.r;
-        if (ny === -1) ball.y = rect.y - ball.r;
-        if (ny === 1) ball.y = rect.y + rect.h + ball.r;
+        const nearest = edges[0].distance;
 
-        distance = ball.r;
+        if (nx === -1) {
+            ball.x = rect.x - ball.r;
+        } else if (nx === 1) {
+            ball.x = rect.x + rect.w + ball.r;
+        } else if (ny === -1) {
+            ball.y = rect.y - ball.r;
+        } else {
+            ball.y = rect.y + rect.h + ball.r;
+        }
+
+        if (nearest < 0) return false;
+
     } else {
+
         nx = dx / distance;
         ny = dy / distance;
 
@@ -972,91 +1535,124 @@ function collideCircleRect(ball, rect) {
         ball.y += ny * (overlap + 0.2);
     }
 
-    // Bounce only when approaching the obstacle.
+    // Bounce the core away from the obstacle.
     const velocity = ball.vx * nx + ball.vy * ny;
 
     if (velocity < 0) {
-        ball.vx -= 1.4 * velocity * nx;
-        ball.vy -= 1.4 * velocity * ny;
+
+        const bounce = 1.35;
+
+        ball.vx -= bounce * velocity * nx;
+        ball.vy -= bounce * velocity * ny;
     }
 
     return true;
 }
 
-// ====================================================
+// =====================================================
 // PHYSICS ENGINE
-// Gravity + magnetic acceleration + collisions.
-// ====================================================
+// Gravity + magnetic acceleration + collision.
+// =====================================================
 
 const GRAVITY = 570;
-const MAGNET_RANGE = 280;
+const MAGNET_RANGE = 285;
 const MAGNET_STRENGTH = 1450;
 const MAX_SPEED = 520;
 
 function updatePhysics(dt) {
+
     const ball = game.ball;
 
-    // Animate moving barriers.
-    for (const o of game.obstacles) {
-        if (o.moving) {
-            o.y = o.baseY +
-                Math.sin(game.elapsed * 1.6 + o.phase) * o.amp;
+    // Move special horizontal barriers.
+    for (const obstacle of game.obstacles) {
+
+        if (obstacle.moving) {
+
+            obstacle.y =
+                obstacle.baseY +
+                Math.sin(
+                    game.elapsed * 1.6 + obstacle.phase
+                ) * obstacle.amplitude;
         }
     }
 
-    // Small substeps improve collision stability.
+    // Use multiple small physics steps for more stable collisions.
     const steps = 3;
     const step = dt / steps;
 
     for (let s = 0; s < steps; s++) {
+
         let ax = 0;
         let ay = GRAVITY;
 
         const dx = game.pointer.x - ball.x;
         const dy = game.pointer.y - ball.y;
+
         const distance = Math.hypot(dx, dy);
 
-        // Apply a magnetic force when inside the field range.
-        if (distance < MAGNET_RANGE && distance > 1) {
-            const falloff = 1 - distance / MAGNET_RANGE;
-            const force = MAGNET_STRENGTH * falloff * falloff;
+        // Magnetic force weakens with distance.
+        if (
+            distance < MAGNET_RANGE &&
+            distance > 1
+        ) {
 
-            ax += (dx / distance) * force * game.polarity;
-            ay += (dy / distance) * force * game.polarity;
+            const falloff = 1 - distance / MAGNET_RANGE;
+
+            const force =
+                MAGNET_STRENGTH *
+                falloff *
+                falloff;
+
+            ax += (dx / distance) *
+                force *
+                game.polarity;
+
+            ay += (dy / distance) *
+                force *
+                game.polarity;
         }
 
+        // Apply acceleration.
         ball.vx += ax * step;
         ball.vy += ay * step;
 
-        // Keep velocity within a safe limit.
+        // Speed limit.
         const speed = Math.hypot(ball.vx, ball.vy);
 
         if (speed > MAX_SPEED) {
+
             ball.vx = ball.vx / speed * MAX_SPEED;
             ball.vy = ball.vy / speed * MAX_SPEED;
         }
 
+        // Update position.
         ball.x += ball.vx * step;
         ball.y += ball.vy * step;
 
-        // Arena boundaries.
+        // Left wall.
         if (ball.x - ball.r < 34) {
+
             ball.x = 34 + ball.r;
             ball.vx = Math.abs(ball.vx) * 0.55;
         }
 
+        // Right wall.
         if (ball.x + ball.r > W - 34) {
+
             ball.x = W - 34 - ball.r;
             ball.vx = -Math.abs(ball.vx) * 0.55;
         }
 
+        // Ceiling.
         if (ball.y - ball.r < 35) {
+
             ball.y = 35 + ball.r;
             ball.vy = Math.abs(ball.vy) * 0.5;
         }
 
-        // Floor collision.
+        // Floor.
         if (ball.y + ball.r > FLOOR) {
+
             ball.y = FLOOR - ball.r;
 
             if (ball.vy > 0) {
@@ -1070,48 +1666,63 @@ function updatePhysics(dt) {
             ball.vx *= Math.pow(0.78, step);
         }
 
-        // Obstacle collisions.
+        // Check all obstacles.
         for (const obstacle of game.obstacles) {
+
             const hit = collideCircleRect(ball, obstacle);
 
             if (hit && game.collisionCooldown <= 0) {
+
                 soundEffect("hit");
-                makeParticles(ball.x, ball.y, 5);
+
+                makeParticles(
+                    ball.x,
+                    ball.y,
+                    5
+                );
+
                 game.collisionCooldown = 0.15;
             }
         }
     }
 
-    // Air friction.
+    // Air resistance.
     ball.vx *= Math.pow(0.995, dt * 60);
     ball.vy *= Math.pow(0.999, dt * 60);
 
     game.collisionCooldown -= dt;
 
-    // Trail behind the moving energy core.
-    game.trail.push({ x: ball.x, y: ball.y });
+    // Energy core trail.
+    game.trail.push({
+        x: ball.x,
+        y: ball.y
+    });
 
     if (game.trail.length > 15) {
         game.trail.shift();
     }
 
-    // Portal check.
+    // Portal detection.
     const portalDistance = Math.hypot(
         ball.x - PORTAL.x,
         ball.y - PORTAL.y
     );
 
-    if (portalDistance < 34) {
+    if (portalDistance < 36) {
         completeLevel();
     }
 }
 
-// ====================================================
-// DRAWING
-// ====================================================
+// =====================================================
+// GRAPHICS
+// =====================================================
 
 function drawBackground() {
-    const gradient = ctx.createLinearGradient(0, 0, 0, H);
+
+    const gradient = ctx.createLinearGradient(
+        0, 0, 0, H
+    );
+
     gradient.addColorStop(0, "#0d2035");
     gradient.addColorStop(1, "#07111e");
 
@@ -1120,11 +1731,20 @@ function drawBackground() {
 
     // Stars.
     for (const star of stars) {
+
         ctx.globalAlpha = star.alpha;
         ctx.fillStyle = "#d5f4ff";
 
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+
+        ctx.arc(
+            star.x,
+            star.y,
+            star.radius,
+            0,
+            Math.PI * 2
+        );
+
         ctx.fill();
     }
 
@@ -1135,6 +1755,7 @@ function drawBackground() {
     ctx.lineWidth = 1;
 
     for (let x = 30; x < W; x += 40) {
+
         ctx.beginPath();
         ctx.moveTo(x, 35);
         ctx.lineTo(x, FLOOR);
@@ -1142,6 +1763,7 @@ function drawBackground() {
     }
 
     for (let y = 50; y < FLOOR; y += 40) {
+
         ctx.beginPath();
         ctx.moveTo(30, y);
         ctx.lineTo(W - 30, y);
@@ -1149,57 +1771,110 @@ function drawBackground() {
     }
 
     // Floor.
-    const floorGradient = ctx.createLinearGradient(0, FLOOR, 0, H);
+    const floorGradient = ctx.createLinearGradient(
+        0, FLOOR, 0, H
+    );
+
     floorGradient.addColorStop(0, "#203c57");
     floorGradient.addColorStop(1, "#101c2c");
 
     ctx.fillStyle = floorGradient;
-    ctx.fillRect(30, FLOOR, W - 60, H - FLOOR);
+
+    ctx.fillRect(
+        30,
+        FLOOR,
+        W - 60,
+        H - FLOOR
+    );
 
     ctx.strokeStyle = "#55dfff80";
     ctx.lineWidth = 2;
+
     ctx.beginPath();
     ctx.moveTo(30, FLOOR);
     ctx.lineTo(W - 30, FLOOR);
     ctx.stroke();
 
-    // Arena border.
+    // Arena boundary.
     ctx.strokeStyle = "#31516e";
     ctx.lineWidth = 2;
-    ctx.strokeRect(30, 35, W - 60, FLOOR - 35);
+
+    ctx.strokeRect(
+        30,
+        35,
+        W - 60,
+        FLOOR - 35
+    );
 }
 
+// =====================================================
+// DRAW OBSTACLES
+// =====================================================
+
 function drawObstacles() {
-    for (const o of game.obstacles) {
+
+    for (const obstacle of game.obstacles) {
+
         ctx.save();
 
-        ctx.shadowColor = o.moving ? "#8c7cff" : "#55dfff";
+        ctx.shadowColor = obstacle.moving
+            ? "#b29cff"
+            : "#55dfff";
+
         ctx.shadowBlur = 12;
 
         const gradient = ctx.createLinearGradient(
-            o.x, o.y, o.x + o.w, o.y + o.h
+            obstacle.x,
+            obstacle.y,
+            obstacle.x + obstacle.w,
+            obstacle.y + obstacle.h
         );
 
         gradient.addColorStop(0, "#38536c");
         gradient.addColorStop(1, "#14273b");
 
         ctx.fillStyle = gradient;
+
         ctx.beginPath();
-        ctx.roundRect(o.x, o.y, o.w, o.h, 5);
+
+        ctx.roundRect(
+            obstacle.x,
+            obstacle.y,
+            obstacle.w,
+            obstacle.h,
+            5
+        );
+
         ctx.fill();
 
         ctx.shadowBlur = 0;
+
         ctx.lineWidth = 2;
-        ctx.strokeStyle = o.moving ? "#b6a2ff" : "#55dfff";
+
+        ctx.strokeStyle = obstacle.moving
+            ? "#b6a2ff"
+            : "#55dfff";
+
         ctx.stroke();
 
+        // Detail lines.
         ctx.strokeStyle = "#ffffff25";
         ctx.lineWidth = 1;
 
-        for (let y = o.y + 12; y < o.y + o.h; y += 17) {
+        for (
+            let y = obstacle.y + 12;
+            y < obstacle.y + obstacle.h;
+            y += 17
+        ) {
+
             ctx.beginPath();
-            ctx.moveTo(o.x + 6, y);
-            ctx.lineTo(o.x + o.w - 6, y);
+
+            ctx.moveTo(obstacle.x + 6, y);
+            ctx.lineTo(
+                obstacle.x + obstacle.w - 6,
+                y
+            );
+
             ctx.stroke();
         }
 
@@ -1207,9 +1882,14 @@ function drawObstacles() {
     }
 }
 
-// Draws the blue energy orb.
+// =====================================================
+// BLUE ENERGY ORB
+// =====================================================
+
 function drawBlueOrb(x, y, radius, time) {
+
     ctx.save();
+
     ctx.globalCompositeOperation = "lighter";
 
     const pulse = 1 + Math.sin(time * 0.004) * 0.08;
@@ -1232,11 +1912,20 @@ function drawBlueOrb(x, y, radius, time) {
     gradient.addColorStop(1, "#0872db");
 
     ctx.fillStyle = gradient;
+
     ctx.beginPath();
-    ctx.arc(x, y, radius * pulse, 0, Math.PI * 2);
+    ctx.arc(
+        x,
+        y,
+        radius * pulse,
+        0,
+        Math.PI * 2
+    );
+
     ctx.fill();
 
     ctx.shadowBlur = 0;
+
     ctx.strokeStyle = "#d8f9ff";
     ctx.lineWidth = 1.5;
     ctx.stroke();
@@ -1244,140 +1933,38 @@ function drawBlueOrb(x, y, radius, time) {
     ctx.restore();
 }
 
-// Gojo mascot.
-// If the image is missing, a simple fallback mascot is drawn.
-function drawFallbackGojo(x, y, time) {
-    ctx.save();
-    ctx.translate(x, y);
-
-    const bob = Math.sin(time * 0.002) * 4;
-    ctx.translate(0, bob);
-
-    // Body.
-    ctx.fillStyle = "#101a2a";
-    ctx.beginPath();
-    ctx.roundRect(-23, 45, 46, 65, 10);
-    ctx.fill();
-
-    ctx.strokeStyle = "#49617c";
-    ctx.stroke();
-
-    // Raised arms.
-    ctx.strokeStyle = "#f1c5ae";
-    ctx.lineWidth = 8;
-    ctx.lineCap = "round";
-
-    ctx.beginPath();
-    ctx.moveTo(-18, 56);
-    ctx.lineTo(-35, 22);
-    ctx.lineTo(-40, 10);
-    ctx.moveTo(18, 56);
-    ctx.lineTo(36, 22);
-    ctx.lineTo(43, 8);
-    ctx.stroke();
-
-    // Face.
-    ctx.fillStyle = "#f4cbb8";
-    ctx.beginPath();
-    ctx.ellipse(0, 22, 32, 37, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // White hair.
-    ctx.fillStyle = "#f4f8ff";
-    ctx.beginPath();
-    ctx.arc(0, 5, 35, Math.PI, Math.PI * 2);
-    ctx.lineTo(28, 10);
-    ctx.lineTo(18, 4);
-    ctx.lineTo(10, 14);
-    ctx.lineTo(0, 3);
-    ctx.lineTo(-11, 15);
-    ctx.lineTo(-25, 5);
-    ctx.lineTo(-31, 19);
-    ctx.closePath();
-    ctx.fill();
-
-    // Blindfold.
-    ctx.fillStyle = "#111722";
-    ctx.fillRect(-30, 12, 60, 15);
-
-    // Coat collar.
-    ctx.fillStyle = "#d9e8f5";
-    ctx.beginPath();
-    ctx.moveTo(-10, 48);
-    ctx.lineTo(0, 62);
-    ctx.lineTo(11, 48);
-    ctx.closePath();
-    ctx.fill();
-
-    // Tiny shoes.
-    ctx.fillStyle = "#090e18";
-    ctx.fillRect(-21, 105, 15, 10);
-    ctx.fillRect(7, 105, 15, 10);
-
-    ctx.restore();
-}
-
-function drawGojo(time) {
-    const bob = Math.sin(time * 0.002) * 5;
-    const x = 785;
-    const y = 105 + bob;
-    const w = 112;
-    const h = 142;
-
-    if (gojoReady) {
-        ctx.save();
-        ctx.globalAlpha = 0.96;
-        ctx.drawImage(gojo, x, y, w, h);
-        ctx.restore();
-    } else {
-        drawFallbackGojo(x + w / 2, y + 28, time);
-    }
-
-    // Blue orb appears just over his raised hand.
-    // Move these coordinates slightly if you replace the image.
-    const orbX = x + w * 0.87;
-    const orbY = y + h * 0.34;
-
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.strokeStyle = "#62dfff";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.arc(orbX, orbY, 23 + Math.sin(time * 0.004) * 3,
-            0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-
-    drawBlueOrb(orbX, orbY, 10, time);
-
-    ctx.fillStyle = "#9deaff";
-    ctx.font = "bold 9px Inter";
-    ctx.textAlign = "center";
-    ctx.fillText("LIMITLESS", x + 57, y + h + 8);
-}
+// =====================================================
+// EXIT PORTAL
+// =====================================================
 
 function drawPortal(time) {
+
     ctx.save();
+
     ctx.translate(PORTAL.x, PORTAL.y);
-    ctx.rotate(time * 0.0006);
+    ctx.rotate(time * 0.0007);
 
     ctx.shadowColor = "#55dfff";
     ctx.shadowBlur = 25;
 
     ctx.strokeStyle = "#55dfff";
     ctx.lineWidth = 5;
+
     ctx.beginPath();
     ctx.arc(0, 0, 31, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.shadowBlur = 8;
+
     ctx.strokeStyle = "#d4faff";
     ctx.lineWidth = 2;
+
     ctx.beginPath();
     ctx.arc(0, 0, 21, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.fillStyle = "#146aab";
+
     ctx.beginPath();
     ctx.arc(0, 0, 17, 0, Math.PI * 2);
     ctx.fill();
@@ -1387,24 +1974,39 @@ function drawPortal(time) {
     ctx.fillStyle = "#a9f0ff";
     ctx.font = "bold 10px Inter";
     ctx.textAlign = "center";
-    ctx.fillText("EXIT", PORTAL.x, PORTAL.y + 52);
+
+    ctx.fillText(
+        "EXIT",
+        PORTAL.x,
+        PORTAL.y + 52
+    );
 }
 
+// =====================================================
+// DRAW MOVING CORE
+// =====================================================
+
 function drawCore() {
+
     const ball = game.ball;
 
     // Trail.
     for (let i = 0; i < game.trail.length; i++) {
+
         const p = game.trail[i];
 
-        ctx.globalAlpha = (i + 1) / game.trail.length * 0.22;
+        ctx.globalAlpha =
+            (i + 1) / game.trail.length * 0.22;
+
         ctx.fillStyle = "#5cddff";
+
         ctx.beginPath();
 
         ctx.arc(
             p.x,
             p.y,
-            ball.r * 0.6 * (i + 1) / game.trail.length,
+            ball.r * 0.6 *
+                (i + 1) / game.trail.length,
             0,
             Math.PI * 2
         );
@@ -1414,13 +2016,19 @@ function drawCore() {
 
     ctx.globalAlpha = 1;
 
+    // Core.
     ctx.save();
+
     ctx.shadowColor = "#55dfff";
     ctx.shadowBlur = 24;
 
     const gradient = ctx.createRadialGradient(
-        ball.x - 5, ball.y - 5, 2,
-        ball.x, ball.y, ball.r + 4
+        ball.x - 5,
+        ball.y - 5,
+        2,
+        ball.x,
+        ball.y,
+        ball.r + 4
     );
 
     gradient.addColorStop(0, "#ffffff");
@@ -1429,8 +2037,16 @@ function drawCore() {
     gradient.addColorStop(1, "#124d86");
 
     ctx.fillStyle = gradient;
+
     ctx.beginPath();
-    ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
+    ctx.arc(
+        ball.x,
+        ball.y,
+        ball.r,
+        0,
+        Math.PI * 2
+    );
+
     ctx.fill();
 
     ctx.strokeStyle = "#d5faff";
@@ -1440,27 +2056,48 @@ function drawCore() {
     ctx.restore();
 }
 
-function drawField() {
+// =====================================================
+// DRAW MAGNETIC FIELD
+// =====================================================
+
+function drawField(time) {
+
     const m = game.pointer;
 
     ctx.save();
-    ctx.globalAlpha = 0.23;
+
+    ctx.globalAlpha = 0.25;
     ctx.strokeStyle = "#55dfff";
     ctx.lineWidth = 1.5;
 
     for (let radius = 27; radius <= 74; radius += 23) {
+
         ctx.beginPath();
-        ctx.arc(m.x, m.y, radius, 0, Math.PI * 2);
+
+        ctx.arc(
+            m.x,
+            m.y,
+            radius,
+            0,
+            Math.PI * 2
+        );
+
         ctx.stroke();
     }
 
     ctx.restore();
 
-    drawBlueOrb(m.x, m.y, 13, performance.now());
+    drawBlueOrb(
+        m.x,
+        m.y,
+        13,
+        time
+    );
 
     ctx.fillStyle = "#d8faff";
     ctx.font = "bold 9px Inter";
     ctx.textAlign = "center";
+
     ctx.fillText(
         game.polarity === 1 ? "PULL" : "PUSH",
         m.x,
@@ -1468,70 +2105,137 @@ function drawField() {
     );
 }
 
+// =====================================================
+// DRAW PARTICLES
+// =====================================================
+
 function drawParticles() {
+
     for (const p of game.particles) {
-        ctx.globalAlpha = Math.max(0, p.life / 0.8);
+
+        ctx.globalAlpha = Math.max(
+            0,
+            p.life / p.maxLife
+        );
+
         ctx.fillStyle = "#8beaff";
 
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI * 2
+        );
+
         ctx.fill();
     }
 
     ctx.globalAlpha = 1;
 }
 
+// =====================================================
+// LEVEL LABEL
+// =====================================================
+
+function drawLevelLabel() {
+
+    ctx.textAlign = "left";
+
+    ctx.fillStyle = "#6ddfff";
+    ctx.font = "bold 10px Inter";
+
+    ctx.fillText(
+        "EXPERIMENT " +
+        String(game.level).padStart(2, "0"),
+        49,
+        59
+    );
+
+    ctx.fillStyle = "#d9edff";
+    ctx.font = "bold 18px Orbitron";
+
+    ctx.fillText(
+        "LIMITLESS BLUE",
+        49,
+        83
+    );
+}
+
+// =====================================================
+// RENDER
+// =====================================================
+
 function render(time) {
+
+    ctx.clearRect(0, 0, W, H);
+
     drawBackground();
     drawPortal(time);
     drawObstacles();
     drawCore();
-    drawGojo(time);
-    drawField();
+    drawField(time);
     drawParticles();
-
-    ctx.textAlign = "left";
-    ctx.fillStyle = "#6ddfff";
-    ctx.font = "bold 10px Inter";
-    ctx.fillText("EXPERIMENT " + String(game.level).padStart(2, "0"), 49, 59);
-
-    ctx.fillStyle = "#d9edff";
-    ctx.font = "bold 18px Orbitron";
-    ctx.fillText("LIMITLESS BLUE", 49, 83);
+    drawLevelLabel();
 }
 
-// ====================================================
-// HUD
-// ====================================================
+// =====================================================
+// HIGH SCORE AND HUD
+// =====================================================
+
+function saveBest() {
+
+    if (game.score > game.best) {
+
+        game.best = game.score;
+
+        try {
+            localStorage.setItem(
+                "fluxBest",
+                String(game.best)
+            );
+        } catch (error) {
+            console.warn("Could not save high score.");
+        }
+    }
+}
 
 function updateHUD() {
-    document.getElementById("level").textContent =
+
+    document.getElementById("levelDisplay").textContent =
         String(game.level).padStart(2, "0");
 
-    document.getElementById("time").textContent =
+    document.getElementById("timeDisplay").textContent =
         Math.max(0, Math.ceil(game.timer));
 
-    document.getElementById("score").textContent =
+    document.getElementById("scoreDisplay").textContent =
         String(game.score).padStart(4, "0");
 
-    document.getElementById("best").textContent =
+    document.getElementById("bestDisplay").textContent =
         String(game.best).padStart(4, "0");
 
-    const hint = game.level < 3
-        ? "Learn to control the blue field and guide the core."
-        : game.level < 7
-        ? "More barriers ahead. Plan your magnetic movement."
-        : "Advanced experiment. Watch your timing and field position.";
+    let hint;
 
-    document.getElementById("hint").innerHTML =
+    if (game.level <= 2) {
+        hint = "Learn to control the blue field and guide the core.";
+    } else if (game.level <= 6) {
+        hint = "More barriers ahead. Plan your magnetic movement.";
+    } else {
+        hint = "Advanced experiment. Watch your timing and field position.";
+    }
+
+    document.getElementById("hintDisplay").innerHTML =
         `<b>LEVEL ${game.level}:</b> ${hint}`;
 }
 
-// ====================================================
-// MAIN LOOP
-// ====================================================
+// =====================================================
+// MAIN GAME LOOP
+// =====================================================
 
 function gameLoop(timestamp) {
+
     const dt = Math.min(
         (timestamp - game.lastFrame) / 1000 || 0,
         0.03
@@ -1540,37 +2244,50 @@ function gameLoop(timestamp) {
     game.lastFrame = timestamp;
 
     if (game.state === "playing") {
+
         game.elapsed += dt;
         game.timer -= dt;
 
         if (game.timer <= 0) {
+
             game.timer = 0;
+
             updateHUD();
+
             failLevel();
+
         } else {
+
             updatePhysics(dt);
             updateParticles(dt);
             updateHUD();
         }
+
     } else if (game.state !== "paused") {
+
         updateParticles(dt);
     }
 
     render(timestamp);
+
     requestAnimationFrame(gameLoop);
 }
 
-// ====================================================
-// INITIALIZE
-// ====================================================
+// =====================================================
+// START APPLICATION
+// =====================================================
 
 updateHUD();
+
 updatePolarityButton();
+
 updateSoundButton();
+
 mainMenu();
 
 requestAnimationFrame(gameLoop);
 
 </script>
+
 </body>
 </html>
